@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import 'dotenv/config';
 import router from './routes/index';
 const cookieParser = require('cookie-parser');
 

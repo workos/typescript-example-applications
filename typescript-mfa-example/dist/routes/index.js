@@ -23,7 +23,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: true }
 }));
-const workos = new node_1.default('sk_test_a2V5XzAxRlZONkUwRkRLMllYS1k0RVFaNlNQOUZKLFhPMktpd1ZpV1EyU1k0bUVVT291MFlZQ1E');
+const workos = new node_1.default(process.env.WORKOS_API_KEY);
 let factors = session.factors = [];
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render('index.ejs', {
@@ -37,20 +37,18 @@ router.get('/enroll_factor', (req, res) => {
 router.post('/enroll_new_factor', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.type === "sms") {
         let phone_number = req.body.phone_number;
-        let options = {
+        const new_factor = yield workos.mfa.enrollFactor({
             type: 'sms',
             phoneNumber: phone_number,
-        };
-        const new_factor = yield workos.mfa.enrollFactor(options);
+        });
         factors.push(new_factor);
     }
     else {
-        let options = {
+        const new_factor = yield workos.mfa.enrollFactor({
             type: 'totp',
             issuer: req.body.totp_issuer,
             user: req.body.totp_user,
-        };
-        const new_factor = yield workos.mfa.enrollFactor(options);
+        });
         factors.push(new_factor);
     }
     res.redirect('/');
@@ -66,18 +64,16 @@ router.post('/challenge_factor', (req, res) => __awaiter(void 0, void 0, void 0,
     if (session.current_factor.type === "sms") {
         let message = req.body.sms_message;
         session.sms_message = message;
-        const options = {
+        const challenge = yield workos.mfa.challengeFactor({
             authenticationFactorId: session.current_factor.id,
             smsTemplate: message,
-        };
-        const challenge = yield workos.mfa.challengeFactor(options);
+        });
         session.challenge_id = challenge.id;
     }
     if (session.current_factor.type === "totp") {
-        const options = {
+        const challenge = yield workos.mfa.challengeFactor({
             authenticationFactorId: session.current_factor.id
-        };
-        const challenge = yield workos.mfa.challengeFactor(options);
+        });
         session.challenge_id = challenge.id;
     }
     res.render('challenge_factor.ejs', { title: 'Challenge Factor' });
@@ -92,11 +88,10 @@ router.post('/verify_factor', (req, res) => __awaiter(void 0, void 0, void 0, fu
     };
     const code = buildCode(req.body);
     const challenge_id = session.challenge_id;
-    const options = {
+    const verify_factor = yield workos.mfa.verifyFactor({
         authenticationChallengeId: challenge_id,
         code: code,
-    };
-    const verify_factor = yield workos.mfa.verifyFactor(options);
+    });
     res.render('challenge_success.ejs', { title: 'Challenge Success', verify_factor: verify_factor });
 }));
 router.get('/clear_session', (req, res) => {
