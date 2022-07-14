@@ -1,6 +1,9 @@
 {
     "extends": "@tsconfig/node14/tsconfig.json",
     "compilerOptions": {},
-    "include": ["src"],
-    "exclude": ["node_modules"]
+    "include": ["src", "index.ts", "routes"],
+    "exclude": ["node_modules"],
+    "files": [
+      "types/session.d.ts"
+  ]
   }

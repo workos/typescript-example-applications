@@ -2,7 +2,15 @@ import express from "express";
 const router = express.Router();
 const app = express();
 import WorkOS from '@workos-inc/node';
-import session from 'express-session';
+const session = require('express-session');
+
+app.use(session({ 
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+    isloggedin: false,
+  }));
 
 const workos = new WorkOS("");
 
@@ -17,10 +25,24 @@ const redirectURI = "http://localhost:3000/callback";
 // of the WorkOS Dashboard.
 const clientID = ""
 
-router.get('/', async (req, res) => {
-    res.render('index.ejs', {
-        title: "Home"
-    });
+router.get('/', (req, res) => {
+
+    try {
+        if (session.isloggedin){
+            res.render('login_successful.ejs', {
+            profile: JSON.stringify(session.profile), 
+            first_name: session.first_name
+            });
+        }
+
+        else {
+            return res.render('index.ejs', {
+                title: "Home"
+            });
+        }
+    } catch (error) {
+        return res.render('error.ejs', {error: error})
+    }
 });
 
 /* GET login page */
@@ -33,9 +55,9 @@ router.get('/login', (_req, res) => {
         });
       
         // Redirect the user to the url generated above.
-        res.redirect(url);
+        return res.redirect(url);
       } catch (error) {
-        console.log(error)
+        return res.render('error.ejs', {error: error})
       }
 });
 
@@ -50,16 +72,29 @@ router.get('/callback', async (req, res) => {
         clientID,
     });
 
-    res.redirect('/');
+
+    session.first_name = profile.profile.first_name;
+    session.profile = profile
+    session.isloggedin = true;
+
+    return res.redirect('/');
 
   } catch (error) {
-    console.log(error)
+    return res.render('error.ejs', {error: error})
   }
 });
   
-  // Logout route
-  router.get('/logout', async (req, res) => {
+// Logout route
+router.get('/logout', async (req, res) => {
+    try {
+      session.first_name = null;
+      session.profile = null;
+      session.isloggedin = null;
+  
+      return res.redirect('/');
+    } catch (error) {
+      return res.render('error.ejs', {error: error})
+    }
   });
   
-
 export default router;

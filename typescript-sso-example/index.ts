@@ -1,15 +1,12 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import express from 'express';
 import 'dotenv/config';
 import router from './routes/index';
-
 
 const app = express();
 const port = 3000;
 
 app.use("/", router);
 app.use('/public', express.static('public'));
-
 
 // start the Express server
 app.listen( port, () => {
