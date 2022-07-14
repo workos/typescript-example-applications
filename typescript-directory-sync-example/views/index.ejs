@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="../public/stylesheets/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+</head>
+
+<body class="container_login">
+    <div class='flex_column'>
+        <div class="flex heading_div">
+            <img class="workos-logo" src="../public/images/workos_logo.png" alt="workos logo">
+            <div class="heading_text_div">
+                <h1>WorkOS</h1>
+            </div>
+        </div>
+
+        <h2>Node.js Directory Sync Example App</h2>
+        <form method="POST" action="/passwordless-auth">
+            <div class='flex_column'>
+                <hr style="width:100%">
+                <a href="/webhooks" class="button button-sm login_button button-outline">Test Webhooks</a>
+                <hr style="width:100%">
+                <% for(let i=0; i<directories.length; i++) {%>
+                    <a href="/directory/<%=directories[i].id%>" class="button button-sm login_button">
+                        <%= directories[i].name %>
+                    </a>
+                    <% } %>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
