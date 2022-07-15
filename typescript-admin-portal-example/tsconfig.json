@@ -1,6 +1,6 @@
 {
     "extends": "@tsconfig/node14/tsconfig.json",
     "compilerOptions": {},
-    "include": ["src"],
+    "include": ["src", "index.ts", "routes"],
     "exclude": ["node_modules"]
   }
