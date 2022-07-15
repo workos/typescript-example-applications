@@ -5,15 +5,7 @@ import { Organization } from "@workos-inc/node/lib/organizations/interfaces/orga
 
 const workos = new WorkOS("");
 
-var organization: Organization = {
-    object: 'organization',
-    id: "",
-    name: "",
-    allow_profiles_outside_organization: false,
-    domains: [],
-    created_at: "",
-    updated_at: "",
-}
+var organization: Organization;
 
 router.get('/', (req, res) => {
     res.render("index.ejs", {
