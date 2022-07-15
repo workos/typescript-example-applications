@@ -1,7 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="../public/stylesheets/style.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+        <link rel="stylesheet" href="../public/css/styles.css">
     </head>
     <body class="container_login">
         <div class='flex_column'>
@@ -11,8 +10,10 @@
                     <h1>WorkOS</h1>
                 </div>
             </div>
-            <h2>Node.js SSO Example App</h2>
-            <a class="button login_button" href="/login">Login</a>
+            <h2>Node.js Magic Link Example App</h2>
+            <p>Check your email <%=email%> for your magic link!</p>
+            <p>Check your email for your magic link!</p>
+            <p><a href=<%=link%>><%=link%></a></p>
         </div>
     </body>
 </html>
