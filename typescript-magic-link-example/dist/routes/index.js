@@ -16,7 +16,7 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const node_1 = __importDefault(require("@workos-inc/node"));
 const workos = new node_1.default(process.env.WORKOS_API_KEY);
-const clientID = process.env.WORKOS_CLIENT_ID;
+const clientID = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : "";
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render("index.ejs", {
         title: "Home",
@@ -25,7 +25,7 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.post('/passwordless-auth', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const session = yield workos.passwordless.createSession({
-        email,
+        email: email,
         type: 'MagicLink'
     });
     yield workos.passwordless.sendSession(session.id);
@@ -35,7 +35,7 @@ router.post('/passwordless-auth', (req, res) => __awaiter(void 0, void 0, void 0
     });
 }));
 router.get("/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const code = req.query.code;
+    const code = typeof req.query.code == 'string' ? req.query.code : '';
     const profile = yield workos.sso.getProfileAndToken({
         code,
         clientID,

@@ -3,37 +3,37 @@ const router = express.Router()
 import WorkOS from '@workos-inc/node'
 
 const workos = new WorkOS(process.env.WORKOS_API_KEY);
-const clientID = process.env.WORKOS_CLIENT_ID;
+const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : "";
 
 router.get("/", async (req, res) => {
   res.render("index.ejs", {
-      title: "Home",
+    title: "Home",
   })
 })
 
 router.post('/passwordless-auth', async (req, res) => {
   const email = req.body.email
-   
-  const session = await workos.passwordless.createSession({ 
-    email,
-    type: 'MagicLink'})
-  
+
+  const session = await workos.passwordless.createSession({
+    email: email,
+    type: 'MagicLink'
+  })
+
   await workos.passwordless.sendSession(session.id);
-  
+
   res.render("confirmation.ejs", {
     email: session.email,
     link: session.link,
   })
 })
-  
-router.get("/success", async (req, res) => {
-  const code = req.query.code;
 
+router.get("/success", async (req, res) => {
+  const code = typeof req.query.code == 'string' ? req.query.code : '';
   const profile = await workos.sso.getProfileAndToken({
     code,
     clientID,
   });
-    
+
   res.render("login_successful.ejs", {
     profile: JSON.stringify(profile, null, 4),
   })

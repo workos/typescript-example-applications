@@ -44,12 +44,17 @@
             <div class="flex_column">
                 <h2>Raw Profile Response Details</h2>
                 <div class="text_box">
-                    <textarea readonly id="profile-raw-info"><%=profile%></textarea>
+                    <pre>
+                        <code class="prettyprint">
+                            <%=profile%>
+                        </code>
+                    </pre>
+
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </body>
 
 </html>
-
