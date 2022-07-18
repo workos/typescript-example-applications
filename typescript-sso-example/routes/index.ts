@@ -12,10 +12,10 @@ app.use(session({
     isloggedin: false,
   }));
 
-const workos = new WorkOS("");
+const workos = new WorkOS(process.env.WORKOS_API_KEY);
 
 // Use the Connection ID associated to your SSO Connection.
-const connection = "";
+const connection = ""
 
 // Set the redirect URI to whatever URL the end user should land on post-authentication.
 // Ensure that the redirect URI you use is included in your allowlist inthe WorkOS Dashboard.
@@ -23,7 +23,7 @@ const redirectURI = "http://localhost:3000/callback";
 
 // Store the Client ID, pulled from .env sourced from the Configuration section
 // of the WorkOS Dashboard.
-const clientID = ""
+const clientID = process.env.WORKOS_CLIENT_ID;
 
 router.get('/', (req, res) => {
 
