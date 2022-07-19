@@ -1,6 +1,6 @@
 # TypeScript Example App with Magic Link powered by WorkOS
 
-An example application demonstrating to use the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) to authenticate users via SSO.
+An example application demonstrating how to use the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) for Magic Link
 
 ## Prerequisites
 
