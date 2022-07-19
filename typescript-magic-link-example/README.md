@@ -25,7 +25,7 @@ Node.js version 10+
 2. Navigate to the Magic Link app within the cloned repo.
 
     ```bash
-    $ cd typescript-example-applications/node-magic-link-example
+    $ cd typescript-example-applications/typescript-magic-link-example
     ```
 
 3. Install the dependencies.
