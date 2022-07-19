@@ -3,7 +3,7 @@ const router = express.Router();
 import WorkOS, { GeneratePortalLinkIntent } from '@workos-inc/node';
 import { Organization } from "@workos-inc/node/lib/organizations/interfaces/organization.interface";
 
-const workos = new WorkOS(process.env.WORKOS_API_KEY);
+const workos = new WorkOS("test");
 
 var organization: Organization;
 
