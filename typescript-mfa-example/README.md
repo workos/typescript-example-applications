@@ -9,13 +9,13 @@ An example Typescript application demonstrating how to use the [WorkOS MFA API](
 1. Clone the main repo and install dependencies for the app you'd like to use:
     ```bash
     # HTTPS
-    git clone https://github.com/workos-inc/typescript-example-applications.git
+    git clone https://github.com/workos/typescript-example-applications.git
     ```
     or
 
     ```bash
     # SSH
-    git clone git@github.com:workos-inc/typescript-example-applications.git
+    git clone git@github.com:workos/typescript-example-applications.git
     ```
 
 2. Navigate to MFA app within the cloned repo. 

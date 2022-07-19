@@ -1,6 +1,6 @@
 # Typescript Example App with Directory Sync powered by WorkOS
 
-An example application demonstrating to use Typescript with the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) to power Directory Sync. 
+An example application demonstrating to use Typescript with the [WorkOS Node SDK](https://github.com/workos/workos-node) to power Directory Sync. 
 
 ## Prerequisites
 
@@ -11,13 +11,13 @@ Node.js version 10+
 1. Clone the main repo and install dependencies for the app you'd like to use:
     ```bash
     # HTTPS
-    git clone https://github.com/workos-inc/typescript-example-applications.git
+    git clone https://github.com/workos/typescript-example-applications.git
     ```
     or
 
     ```bash
     # SSH
-    git clone git@github.com:workos-inc/typescript-example-applications.git
+    git clone git@github.com:workos/typescript-example-applications.git
     ```
 
 2. Navigate to Directory Sync app within the cloned repo. 
