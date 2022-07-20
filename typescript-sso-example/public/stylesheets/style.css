@@ -36,12 +36,24 @@ body {
     align-items: center;
 }
 
-.space-between {
-    justify-content: space-between;
+.m-top-20 {
+    margin-top: 20px;
 }
 
 .width-75 {
-    width: 55%;
+    width: 75%;
+}
+
+.width-40vw {
+    width: 40vw;
+}
+
+.width-25vw {
+    width: 25vw;
+}
+
+.space-between {
+    justify-content: space-between;
 }
 
 .container_success {
@@ -53,7 +65,7 @@ body {
 }
 
 .heading_div {
-    margin: 25px 0px 25px 0px;
+    margin: 35px 0px 0px 0px;
 }
 
 .heading_text_div {
@@ -68,6 +80,52 @@ body {
     width: 100%;
     background-size: cover;
 }
+
+.text_input {
+    border: 1px solid #555555;
+    border-radius: 10px;
+    margin: 20px 0px 7px 0px;
+    padding: 5px;
+    height: 35px;
+    width: 18vw;
+    text-align: center;
+}
+
+.code-input {
+    width: 75px;
+    height: 100px;
+    margin: 0px 5px 30px 5px;
+    font-size: 60px;
+    color: darkslategray;
+}
+
+.qr_div {
+    align-self: center;
+    margin-top: 45px;
+}
+
+.qr_code {
+    width: 7vw;
+    max-width: 100px;
+}
+
+
+.factor_card {
+    border: 1px solid #555555;
+    border-radius: 10px;
+    width: 20vw;
+    margin: 0px 15px 0px 15px;
+    padding: 25px;
+}
+
+.card {
+    border: 1px solid #555555;
+    border-radius: 10px;
+    margin: 0px 15px 0px 15px;
+    padding: 25px 50px;
+    margin-bottom: 20px;
+}
+
 
 .button {
     background-color: #6363f1;
@@ -88,6 +146,10 @@ body {
 .button-outline {
     background-color: #f9f9fb;
     color: #6363f1;
+    padding: 8px 16px;
+}
+
+.button-sm {
     padding: 8px 16px;
 }
 
@@ -187,9 +249,7 @@ h1 {
 
 div.text_box {
     background-color: #f9f9fb;
-    /* border-radius: 5px;
-    border: 2px solid #6363f1; */
-    width: 75%;
+    width: 40vw;
     max-height: 30vh;
     padding: 10px;
     word-wrap: break-word;
@@ -244,4 +304,18 @@ div.text_box {
     background-color: #f9f9fb;
     border: 2px solid #f9f9fb;
     color: #a6a4a4;
+}
+
+.workos-logo {
+    position: relative;
+    top: 38px;
+    padding-right: 25px;
+    height: 75px !important;
+}
+
+.webhooks_container {
+    width: 45vw;
+    padding: 25px;
+    max-height: 450px;
+    overflow-y: scroll;
 }

@@ -52,7 +52,7 @@ file at the root of the project, and store these like so:
 8. Start the server and head to `http://localhost:3000/ to begin the login flow! 
 
 ```sh
-ts-node index.ts
+npm run dev
 ```
 
 

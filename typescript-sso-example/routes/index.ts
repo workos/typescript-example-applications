@@ -4,15 +4,16 @@ const app = express();
 import WorkOS from '@workos-inc/node';
 const session = require('express-session');
 
-app.use(session({ 
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-    isloggedin: false,
-  }));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true },
+  isloggedin: false,
+}));
 
 const workos = new WorkOS(process.env.WORKOS_API_KEY);
+const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : "";
 
 // Use the Connection ID associated to your SSO Connection.
 const connection = ""
@@ -23,53 +24,53 @@ const redirectURI = "http://localhost:3000/callback";
 
 // Store the Client ID, pulled from .env sourced from the Configuration section
 // of the WorkOS Dashboard.
-const clientID = process.env.WORKOS_CLIENT_ID;
+
 
 router.get('/', (req, res) => {
 
-    try {
-        if (session.isloggedin){
-            res.render('login_successful.ejs', {
-            profile: JSON.stringify(session.profile), 
-            first_name: session.first_name
-            });
-        }
-
-        else {
-            return res.render('index.ejs', {
-                title: "Home"
-            });
-        }
-    } catch (error) {
-        return res.render('error.ejs', {error: error})
+  try {
+    if (session.isloggedin) {
+      res.render('login_successful.ejs', {
+        profile: JSON.stringify(session.profile, null, 2),
+        first_name: session.first_name
+      });
     }
+
+    else {
+      return res.render('index.ejs', {
+        title: "Home"
+      });
+    }
+  } catch (error) {
+    return res.render('error.ejs', { error: error })
+  }
 });
 
 /* GET login page */
 router.get('/login', (_req, res) => {
-    try {
-        const url = workos.sso.getAuthorizationURL({
-          connection: connection,
-          clientID: clientID,
-          redirectURI: redirectURI,
-        });
-      
-        // Redirect the user to the url generated above.
-        return res.redirect(url);
-      } catch (error) {
-        return res.render('error.ejs', {error: error})
-      }
+  try {
+    const url = workos.sso.getAuthorizationURL({
+      connection: connection,
+      clientID: clientID,
+      redirectURI: redirectURI,
+    });
+
+    // Redirect the user to the url generated above.
+    return res.redirect(url);
+  } catch (error) {
+    return res.render('error.ejs', { error: error })
+  }
 });
 
 /* GET callback page */
 router.get('/callback', async (req, res) => {
-    try {
-      // Capture and save the `code` passed as a querystring in the Redirect URI.
+  try {
+    // Capture and save the `code` passed as a querystring in the Redirect URI.
     const code = req.query.code as unknown as string;
-  
+
     const profile = await workos.sso.getProfileAndToken({
-        code,
-        clientID,
+      code,
+      clientID,
     });
 
 
@@ -80,21 +81,21 @@ router.get('/callback', async (req, res) => {
     return res.redirect('/');
 
   } catch (error) {
-    return res.render('error.ejs', {error: error})
+    return res.render('error.ejs', { error: error })
   }
 });
-  
+
 // Logout route
 router.get('/logout', async (req, res) => {
-    try {
-      session.first_name = null;
-      session.profile = null;
-      session.isloggedin = null;
-  
-      return res.redirect('/');
-    } catch (error) {
-      return res.render('error.ejs', {error: error})
-    }
-  });
-  
+  try {
+    session.first_name = null;
+    session.profile = null;
+    session.isloggedin = null;
+
+    return res.redirect('/');
+  } catch (error) {
+    return res.render('error.ejs', { error: error })
+  }
+});
+
 export default router;
