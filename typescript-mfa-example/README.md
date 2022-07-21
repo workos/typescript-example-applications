@@ -1,10 +1,10 @@
-# Typescript Example App with MFA powered by WorkOS
-An example Typescript application demonstrating how to use the [WorkOS MFA API](https://workos.com/docs/mfa/guide) using the [Node SDK](https://github.com/workos/workos-node) to authenticate users.
+# TypeScript Example App with MFA powered by WorkOS
+An example TypeScript application demonstrating how to use the [WorkOS MFA API](https://workos.com/docs/mfa/guide) using the [Node SDK](https://github.com/workos/workos-node) to authenticate users.
 
 ## Prerequisites
 -Node.js version 10+
 
-## Typescript Project Setup
+## TypeScript Project Setup
 
 1. Clone the main repo and install dependencies for the app you'd like to use:
     ```bash

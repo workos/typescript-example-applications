@@ -1,6 +1,6 @@
-# Typescript Example Applications powered by WorkOS
+# TypeScript Example Applications powered by WorkOS
 
-Example Typescript applications demonstrating to use the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) for SSO, Directory Sync, Admin Portal and Magic Link.
+Example TypeScript applications demonstrating to use the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) for SSO, Directory Sync, Admin Portal and Magic Link.
 
 ## For more information, please see the following guides:
 

@@ -1,6 +1,6 @@
-# Typescript Example App with Directory Sync powered by WorkOS
+# TypeScript Example App with Directory Sync powered by WorkOS
 
-An example application demonstrating to use Typescript with the [WorkOS Node SDK](https://github.com/workos/workos-node) to power Directory Sync. 
+An example application demonstrating to use TypeScript with the [WorkOS Node SDK](https://github.com/workos/workos-node) to power Directory Sync. 
 
 ## Prerequisites
 

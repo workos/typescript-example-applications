@@ -1,6 +1,6 @@
-# Typescript Example App with Admin Portal powered by WorkOS
+# TypeScript Example App with Admin Portal powered by WorkOS
 
-An example application demonstrating to use Typescript  with the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) to access the Admin Portal for SSO and Directory Sync. 
+An example application demonstrating to use TypeScript  with the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) to access the Admin Portal for SSO and Directory Sync. 
 
 ## Prerequisites
 
