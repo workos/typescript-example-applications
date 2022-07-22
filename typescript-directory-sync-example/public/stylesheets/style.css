@@ -319,3 +319,20 @@ div.text_box {
     max-height: 450px;
     overflow-y: scroll;
 }
+
+ul {
+    list-style-type: none;
+    margin-right: 35px;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+li.even {
+    background-color: rgb(228, 228, 228);
+}

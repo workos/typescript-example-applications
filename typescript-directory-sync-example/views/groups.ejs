@@ -11,7 +11,7 @@
                 <img src="/public/images/workos_logo_new.png" alt="workos logo">
             </div>
             <div class="flex">
-                <p>MFA Example App</p>
+                <p>WorkOS</p>
             </div>
         </div>
         <div>
@@ -49,12 +49,20 @@
                     <%if (groups.length) {%>
                         <ul>
                             <% for(let i=0; i<groups.length; i++) {%>
-                                <a href="/directory/<%=directory.id%>/group/<%=groups[i].id%>">
-                                    <li>
-                                        <%= groups[i].name %>
-                                    </li>
-                                </a>
-                                <% } %>
+                                <%if(i % 2==0){%>
+                                    <a href="/directory/<%=directory.id%>/group/<%=groups[i].id%>">
+                                        <li class="even">
+                                            <%= groups[i].name %>
+                                        </li>
+                                    </a>
+                                    <%} else {%>
+                                        <a href="/directory/<%=directory.id%>/group/<%=groups[i].id%>">
+                                            <li>
+                                                <%= groups[i].name %>
+                                            </li>
+                                        </a>
+                                        <%}%>
+                                            <% } %>
                         </ul>
                         <%} else { %>
                             <code>No Groups Found</code>
@@ -66,13 +74,22 @@
                     <%if (users.length) {%>
                         <ul>
                             <% for(let i=0; i<users.length; i++) {%>
-                                <a href="/directory/<%=directory.id%>/user/<%=users[i].id%>">
-                                    <li>
-                                        <%=users[i].first_name%>
-                                            <%=users[i].last_name%>, <%=users[i].username%>
-                                    </li>
-                                </a>
-                                <% } %>
+                                <%if (i % 2==0) {%>
+                                    <a href="/directory/<%=directory.id%>/user/<%=users[i].id%>">
+                                        <li class="even">
+                                            <%=users[i].first_name%>
+                                                <%=users[i].last_name%>, <%=users[i].username%>
+                                        </li>
+                                    </a>
+                                    <%}else{%>
+                                        <a href="/directory/<%=directory.id%>/user/<%=users[i].id%>">
+                                            <li>
+                                                <%=users[i].first_name%>
+                                                    <%=users[i].last_name%>, <%=users[i].username%>
+                                            </li>
+                                        </a>
+                                        <%}%>
+                                            <% } %>
                         </ul>
                         <%} else { %>
                             <code>No Users Found</code>
