@@ -1,6 +1,6 @@
 # TypeScript Example App with Directory Sync powered by WorkOS
 
-An example application demonstrating to use TypeScript with the [WorkOS Node SDK](https://github.com/workos/workos-node) to power Directory Sync. 
+An example application demonstrating to use TypeScript with the [WorkOS Node SDK](https://github.com/workos/workos-node) to power Directory Sync.
 
 ## Prerequisites
 
@@ -9,10 +9,12 @@ Node.js version 10+
 ## Node Project Setup
 
 1. Clone the main repo and install dependencies for the app you'd like to use:
+
     ```bash
     # HTTPS
     git clone https://github.com/workos/typescript-example-applications.git
     ```
+
     or
 
     ```bash
@@ -20,28 +22,28 @@ Node.js version 10+
     git clone git@github.com:workos/typescript-example-applications.git
     ```
 
-2. Navigate to Directory Sync app within the cloned repo. 
-   ```bash
-   $ cd typescript-example-applications/typescript-directory-sync-example
-   ```
+2. Navigate to Directory Sync app within the cloned repo.
 
-3. Install the dependencies. 
+    ```bash
+    $ cd typescript-example-applications/typescript-directory-sync-example
+    ```
+
+3. Install the dependencies.
     ```bash
     $ npm install
     ```
-
 
 ## Configure your environment
 
 1. Grab your [API Key](https://dashboard.workos.com/api-keys).
 2. Get your [Client ID](https://dashboard.workos.com/sso/configuration).
 3. Create a `.env` file at the root of the project and populate with the
-following environment variables (using values found above):
+   following environment variables (using values found above):
 
 ```typescript
-WORKOS_API_KEY=your_api_key_here
-WORKOS_CLIENT_ID=your_project_id_here
-PORT=3000
+WORKOS_API_KEY = your_api_key_here
+WORKOS_CLIENT_ID = your_project_id_here
+PORT = 8000
 ```
 
 ## Run the server
@@ -50,12 +52,11 @@ PORT=3000
 npm run dev
 ```
 
-Head to `http://localhost:3000/` to navigate your directories!
+Head to `http://localhost:8000/` to navigate your directories!
 
 ## Testing Webhooks
 
 ### 1. Click on the "Test Webhooks" button to navigate to the webhooks view.
-
 
 ### 2. Start an `ngrok` session
 
@@ -82,7 +83,6 @@ Then populate the following environment variable in your `.env` file at the root
 ```sh
 WORKOS_WEBHOOK_SECRET=your_webhook_secret
 ```
-
 
 ## Need help?
 

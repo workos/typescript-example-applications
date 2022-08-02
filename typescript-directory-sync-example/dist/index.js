@@ -13,30 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const path = require("path");
-const WorkOS = require('@workos-inc/node').default;
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require("dotenv/config");
+const node_1 = require("@workos-inc/node");
+const socket_io_1 = require("socket.io");
+const morgan_1 = __importDefault(require("morgan"));
 process.on('unhandledRejection', (reason, p) => { throw reason; });
-dotenv_1.default.config();
 const app = (0, express_1.default)();
-const port = process.env.PORT;
-const workos = new WorkOS(process.env.WORKOS_API_KEY);
+const port = process.env.PORT || '8000';
+const workos = new node_1.WorkOS(process.env.WORKOS_API_KEY);
+app.use('/public', express_1.default.static('public'));
+app.use(express_1.default.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+app.use(express_1.default.json());
+app.use((0, morgan_1.default)('dev'));
 const server = app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
-const io = require('socket.io')(server);
-// app.engine('html', require('ejs').renderFile);
-app.set('views', './views');
-app.set('view engine', 'ejs');
-app.use(express_1.default.static(path.join(__dirname, "public")));
-app.use(logger('dev'));
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express_1.default.static(path.join(__dirname)));
-app.use('/public', express_1.default.static('public'));
+const io = new socket_io_1.Server(server);
 io.on('connection', (socket) => {
     console.log('connected');
     socket.on('disconnect', () => {
@@ -63,12 +56,12 @@ app.get('/directory/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
 app.post('/webhooks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const webhook = workos.webhooks.constructEvent({
         payload: req.body,
-        sigHeader: req.headers['workos-signature'],
-        secret: process.env.WORKOS_WEBHOOK_SECRET,
+        sigHeader: typeof req.headers['workos-signature'] === 'string' ? req.headers['workos-signature'] : "",
+        secret: process.env.WORKOS_WEBHOOK_SECRET !== undefined ? process.env.WORKOS_WEBHOOK_SECRET : "",
         tolerance: 90000,
     });
     io.emit('webhook event', { webhook });
-    return 200;
+    res.sendStatus(200);
 }));
 app.get('/webhooks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render('webhooks.ejs', {
