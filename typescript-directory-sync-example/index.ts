@@ -1,10 +1,10 @@
 import express, { Express } from 'express'
-import dotenv from 'dotenv'
-import { Server, Socket } from 'socket.io'
+import 'dotenv/config'
 import { WorkOS, Directory, Group, User } from '@workos-inc/node'
+import { Server, Socket } from 'socket.io'
 import morgan from 'morgan'
 process.on('unhandledRejection', (reason, p) => { throw reason });
-dotenv.config();
+
 const app: Express = express();
 const port = process.env.PORT || '8000'
 const workos = new WorkOS(process.env.WORKOS_API_KEY)
@@ -47,8 +47,6 @@ app.get('/directory/:id', async (req, res) => {
         title: "Directory"
     })
 })
-
-// const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ""
 
 app.post('/webhooks', async (req, res) => {
     const webhook = workos.webhooks.constructEvent({

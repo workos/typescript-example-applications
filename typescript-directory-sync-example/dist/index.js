@@ -13,12 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const socket_io_1 = require("socket.io");
+require("dotenv/config");
 const node_1 = require("@workos-inc/node");
+const socket_io_1 = require("socket.io");
 const morgan_1 = __importDefault(require("morgan"));
 process.on('unhandledRejection', (reason, p) => { throw reason; });
-dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || '8000';
 const workos = new node_1.WorkOS(process.env.WORKOS_API_KEY);
@@ -54,12 +53,11 @@ app.get('/directory/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         title: "Directory"
     });
 }));
-// const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ""
 app.post('/webhooks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const webhook = workos.webhooks.constructEvent({
         payload: req.body,
-        sigHeader: req.headers['workos-signature'] !== undefined ? req.headers['workos-signature'] : "",
-        secret: process.env.WORKOS_WEBHOOK_SECRET,
+        sigHeader: typeof req.headers['workos-signature'] === 'string' ? req.headers['workos-signature'] : "",
+        secret: process.env.WORKOS_WEBHOOK_SECRET !== undefined ? process.env.WORKOS_WEBHOOK_SECRET : "",
         tolerance: 90000,
     });
     io.emit('webhook event', { webhook });
