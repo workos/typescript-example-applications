@@ -48,11 +48,13 @@ app.get('/directory/:id', async (req, res) => {
     })
 })
 
+// const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ""
+
 app.post('/webhooks', async (req, res) => {
     const webhook = workos.webhooks.constructEvent({
         payload: req.body,
-        sigHeader: req.headers['workos-signature'],
-        secret: process.env.WORKOS_WEBHOOK_SECRET,
+        sigHeader: typeof req.headers['workos-signature'] === 'string' ? req.headers['workos-signature'] : "",
+        secret: process.env.WORKOS_WEBHOOK_SECRET !== undefined ? process.env.WORKOS_WEBHOOK_SECRET : "",
         tolerance: 90000,
     })
     io.emit('webhook event', { webhook })

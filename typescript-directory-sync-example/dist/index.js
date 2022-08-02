@@ -54,10 +54,11 @@ app.get('/directory/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         title: "Directory"
     });
 }));
+// const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ""
 app.post('/webhooks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const webhook = workos.webhooks.constructEvent({
         payload: req.body,
-        sigHeader: req.headers['workos-signature'],
+        sigHeader: req.headers['workos-signature'] !== undefined ? req.headers['workos-signature'] : "",
         secret: process.env.WORKOS_WEBHOOK_SECRET,
         tolerance: 90000,
     });
