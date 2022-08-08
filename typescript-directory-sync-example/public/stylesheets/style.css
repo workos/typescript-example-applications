@@ -13,16 +13,6 @@ body {
     height: 90vh;
 }
 
-.container_login img {
-    height: 150px;
-}
-
-.container_login h1 {
-    font-size: 65px;
-    color: #111111;
-    position: relative;
-    bottom: 10px;
-}
 
 .flex {
     display: flex;
@@ -278,12 +268,6 @@ div.text_box {
 
 .logged_in_nav img {
     height: 50px;
-    border-radius: 50%;
-    border: 2px solid #2f2e2e;
-}
-
-.logged_in_nav img:hover {
-    border: 2px solid #555555;
 }
 
 .nav-item {
@@ -307,10 +291,7 @@ div.text_box {
 }
 
 .workos-logo {
-    position: relative;
-    top: 38px;
-    padding-right: 25px;
-    height: 75px !important;
+    height: 150px;
 }
 
 .webhooks_container {
