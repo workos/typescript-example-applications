@@ -1,7 +1,7 @@
 {
-  "name": "node-audit-logs-example-app",
+  "name": "typescript-audit-logs-example-app",
   "version": "1.0.0",
-  "description": "Example NodeJS Audit Logs App using WorkOS",
+  "description": "Example TypeScript Audit Logs App using WorkOS",
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -25,7 +25,7 @@ An example Node.js / TypeScript application demonstrating how to use the [WorkOS
 2. Navigate to Audit Logs app within the cloned repo.
 
     ```bash
-    $ cd node-example-applications/typescript-audit-logs-example
+    $ cd typescript-example-applications/typescript-audit-logs-example
     ```
 
 3. Install the dependencies.
