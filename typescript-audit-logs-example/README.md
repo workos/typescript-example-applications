@@ -6,7 +6,7 @@ An example Node.js / TypeScript application demonstrating how to use the [WorkOS
 
 -Node.js version 10+
 
-## Node Project Setup
+## TypeScript Project Setup
 
 1. Clone the main repo and install dependencies for the app you'd like to use:
 
