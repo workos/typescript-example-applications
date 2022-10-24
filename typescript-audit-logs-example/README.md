@@ -1,6 +1,6 @@
-# Node.js Example App with Audit Logs powered by WorkOS
+# TypeScript Example App with Audit Logs powered by WorkOS
 
-An example Node.js application demonstrating how to use the [WorkOS Node.js SDK](https://github.com/workos/workos-node) to send and retrieve Audit Log events. This app is not meant to show a real-world example of an Audit Logs implementation, but rather to show concrete examples of how events can be sent using the Node.js SDK.
+An example Node.js / TypeScript application demonstrating how to use the [WorkOS Node.js SDK](https://github.com/workos/workos-node) to send and retrieve Audit Log events. This app is not meant to show a real-world example of an Audit Logs implementation, but rather to show concrete examples of how events can be sent using the Node.js SDK.
 
 ## Prerequisites
 
@@ -12,20 +12,20 @@ An example Node.js application demonstrating how to use the [WorkOS Node.js SDK]
 
     ```bash
     # HTTPS
-    git clone https://github.com/workos/node-example-applications.git
+    git clone https://github.com/workos/typescript-example-applications.git
     ```
 
     or
 
     ```bash
     # SSH
-    git clone git@github.com:workos/node-example-applications.git
+    git clone git@github.com:workos/typescript-example-applications.git
     ```
 
 2. Navigate to Audit Logs app within the cloned repo.
 
     ```bash
-    $ cd node-example-applications/node-audit-logs-example
+    $ cd node-example-applications/typescript-audit-logs-example
     ```
 
 3. Install the dependencies.
