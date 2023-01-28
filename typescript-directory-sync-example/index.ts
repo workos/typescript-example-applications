@@ -31,11 +31,19 @@ io.on('connection', (socket: Socket) => {
 })
 
 app.get('/', async (req: Request, res: Response) => {
-    const directories = await workos.directorySync.listDirectories()
+    let before = req.query.before ? req.query.before.toString() : undefined
+    let after = req.query.after ? req.query.after.toString() : undefined
+
+    const directories = await workos.directorySync.listDirectories({ limit: 1, before: before, after: after, order: undefined })
+
+    before = directories.list_metadata.before
+    after = directories.list_metadata.after
 
     res.render('index', {
         title: 'Home',
-        directories: directories.data
+        directories: directories.data,
+        before: before,
+        after: after
     })
 })
 
