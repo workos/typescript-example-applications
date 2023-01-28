@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from 'express'
-import { WorkOS, Directory, Group, User } from '@workos-inc/node'
+import { WorkOS, Directory, Group, User, Webhook } from '@workos-inc/node'
 import { List } from '@workos-inc/node/lib/common/interfaces/list.interface'
 import { Server, Socket } from 'socket.io'
 import morgan from 'morgan'
@@ -88,16 +88,19 @@ app.get('/directory/:id/usersgroups', async (req: Request, res: Response) => {
 })
 
 app.get('/directory/:id/group/:groupId', async (req: Request, res: Response) => {
-    const directories = await workos.directorySync.listDirectories()
-    const directory = await directories.data.filter((directory: Directory) => {
+    const directories: List<Directory> = await workos.directorySync.listDirectories()
+    const directory: Directory = directories.data.filter((directory: Directory) => {
         return directory.id == req.params.id
     })[0]
-    const groups = await workos.directorySync.listGroups({
+
+    const groups: List<Group> = await workos.directorySync.listGroups({
         directory: req.params.id,
     })
-    const group = await groups.data.filter((group: Group) => {
+
+    const group: Group = groups.data.filter((group: Group) => {
         return group.id == req.params.groupId
     })[0]
+
     res.render('group.ejs', {
         directory: directory,
         title: 'Directory',
@@ -107,16 +110,19 @@ app.get('/directory/:id/group/:groupId', async (req: Request, res: Response) => 
 })
 
 app.get('/directory/:id/user/:userId', async (req: Request, res: Response) => {
-    const directories = await workos.directorySync.listDirectories()
-    const directory = await directories.data.filter((directory: Directory) => {
+    const directories: List<Directory> = await workos.directorySync.listDirectories()
+    const directory: Directory = directories.data.filter((directory: Directory) => {
         return directory.id == req.params.id
     })[0]
-    const users = await workos.directorySync.listUsers({
+
+    const users: List<User> = await workos.directorySync.listUsers({
         directory: req.params.id,
     })
-    const user = await users.data.filter((user: User) => {
+
+    const user: User = users.data.filter((user: User) => {
         return user.id == req.params.userId
     })[0]
+
     res.render('user', {
         directory: directory,
         title: 'Directory',
@@ -126,18 +132,19 @@ app.get('/directory/:id/user/:userId', async (req: Request, res: Response) => {
 })
 
 app.post('/webhooks', async (req: Request, res: Response) => {
-    const webhook = workos.webhooks.constructEvent({
+    const webhook: Webhook = workos.webhooks.constructEvent({
         payload: req.body,
         sigHeader: typeof req.headers['workos-signature'] === 'string' ? req.headers['workos-signature'] : '',
         secret: process.env.WORKOS_WEBHOOK_SECRET !== undefined ? process.env.WORKOS_WEBHOOK_SECRET : '',
         tolerance: 90000,
     })
+
     io.emit('webhook event', { webhook })
 
     res.sendStatus(200)
 })
 
-app.get('/webhooks', async (req, res) => {
+app.get('/webhooks', async (req: Request, res: Response) => {
     res.render('webhooks.ejs', {
         title: 'Webhooks'
     })
