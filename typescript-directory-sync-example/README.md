@@ -46,10 +46,17 @@ WORKOS_CLIENT_ID = your_project_id_here
 PORT = 8000
 ```
 
-## Run the server
+## Run the development server
 
 ```sh
 npm run dev
+```
+
+## Compile TypeScript code and run the server
+
+```sh
+npm run build
+npm start
 ```
 
 Head to `http://localhost:8000/` to navigate your directories!
