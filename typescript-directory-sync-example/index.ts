@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from 'express'
 import { WorkOS, Directory, Group, User } from '@workos-inc/node'
+import { List } from '@workos-inc/node/lib/common/interfaces/list.interface'
 import { Server, Socket } from 'socket.io'
 import morgan from 'morgan'
 import 'dotenv/config'
@@ -31,10 +32,15 @@ io.on('connection', (socket: Socket) => {
 })
 
 app.get('/', async (req: Request, res: Response) => {
-    let before = req.query.before ? req.query.before.toString() : undefined
-    let after = req.query.after ? req.query.after.toString() : undefined
+    let before: string | undefined = req.query.before ? req.query.before.toString() : undefined
+    let after: string | undefined = req.query.after ? req.query.after.toString() : undefined
 
-    const directories = await workos.directorySync.listDirectories({ limit: 1, before: before, after: after, order: undefined })
+    const directories: List<Directory> = await workos.directorySync.listDirectories({ 
+        limit: 5, 
+        before: before, 
+        after: after, 
+        order: undefined 
+    })
 
     before = directories.list_metadata.before
     after = directories.list_metadata.after
@@ -48,8 +54,8 @@ app.get('/', async (req: Request, res: Response) => {
 })
 
 app.get('/directory/:id', async (req: Request, res: Response) => {
-    const directories = await workos.directorySync.listDirectories()
-    const directory: Directory = await directories.data.filter((directory: Directory) => {
+    const directories: List<Directory> = await workos.directorySync.listDirectories()
+    const directory: Directory = directories.data.filter((directory: Directory) => {
         return directory.id == req.params.id
     })[0]
     res.render('directory.ejs', {
