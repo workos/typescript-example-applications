@@ -1,14 +1,12 @@
-import express from 'express'
+import express, { Application } from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import 'dotenv/config'
 import router from './routes/index'
 
-dotenv.config()
+const app: Application = express()
 
-const app = express()
-
-const port = process.env.PORT || 8000
+const port: string = process.env.PORT || '8000'
 
 app.use('/public', express.static('public'))
 
@@ -18,6 +16,6 @@ app.use(morgan('dev'))
 
 app.use('/', router)
 
-app.listen(port, () => {
-  console.log(`Server is running at https://localhost:${port}`)
+app.listen(port, (): void => {
+  console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
 })
