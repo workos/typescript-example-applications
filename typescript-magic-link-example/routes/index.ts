@@ -1,13 +1,13 @@
-import express from "express"
+import express from 'express'
 const router = express.Router()
 import WorkOS from '@workos-inc/node'
 
-const workos = new WorkOS(process.env.WORKOS_API_KEY);
-const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : "";
+const workos = new WorkOS(process.env.WORKOS_API_KEY)
+const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
 
-router.get("/", async (req, res) => {
-  res.render("index.ejs", {
-    title: "Home",
+router.get('/', async (req, res) => {
+  res.render('index.ejs', {
+    title: 'Home',
   })
 })
 
@@ -19,24 +19,24 @@ router.post('/passwordless-auth', async (req, res) => {
     type: 'MagicLink'
   })
 
-  await workos.passwordless.sendSession(session.id);
+  await workos.passwordless.sendSession(session.id) 
 
-  res.render("confirmation.ejs", {
+  res.render('confirmation.ejs', {
     email: session.email,
     link: session.link,
   })
 })
 
-router.get("/success", async (req, res) => {
-  const code = typeof req.query.code == 'string' ? req.query.code : '';
+router.get('/callback', async (req, res) => {
+  const code = typeof req.query.code == 'string' ? req.query.code : '' 
   const profile = await workos.sso.getProfileAndToken({
     code,
     clientID,
-  });
+  }) 
 
-  res.render("login_successful.ejs", {
+  res.render('login_successful.ejs', {
     profile: JSON.stringify(profile, null, 4),
   })
 })
 
-export default router;
+export default router
