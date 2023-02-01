@@ -1,20 +1,21 @@
-import express from 'express'
-const router = express.Router()
-import WorkOS from '@workos-inc/node'
+import express, { Request, Response, Router }from 'express'
+import WorkOS, { PasswordlessSession, ProfileAndToken } from '@workos-inc/node'
 
-const workos = new WorkOS(process.env.WORKOS_API_KEY)
+const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
 
-router.get('/', async (req, res) => {
+const router: Router = express.Router()
+
+router.get('/', async (req: Request, res: Response) => {
   res.render('index.ejs', {
     title: 'Home',
   })
 })
 
-router.post('/passwordless-auth', async (req, res) => {
-  const email = req.body.email
+router.post('/passwordless-auth', async (req: Request, res: Response) => {
+  const email: string = req.body.email
 
-  const session = await workos.passwordless.createSession({
+  const session: PasswordlessSession = await workos.passwordless.createSession({
     email: email,
     type: 'MagicLink'
   })
@@ -27,9 +28,9 @@ router.post('/passwordless-auth', async (req, res) => {
   })
 })
 
-router.get('/callback', async (req, res) => {
-  const code = typeof req.query.code == 'string' ? req.query.code : '' 
-  const profile = await workos.sso.getProfileAndToken({
+router.get('/callback', async (req: Request, res: Response) => {
+  const code: string = typeof req.query.code == 'string' ? req.query.code : '' 
+  const profile: ProfileAndToken = await workos.sso.getProfileAndToken({
     code,
     clientID,
   }) 
