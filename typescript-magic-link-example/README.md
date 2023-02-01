@@ -1,6 +1,6 @@
 # TypeScript Example App with Magic Link powered by WorkOS
 
-An example application demonstrating how to use the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) for Magic Link
+An example application demonstrating how to use the [WorkOS Node SDK](https://github.com/workos-inc/workos-node) for Magic Link.
 
 ## Prerequisites
 
@@ -43,14 +43,22 @@ Node.js version 10+
 ```typescript
 WORKOS_API_KEY = your_api_key_here
 WORKOS_CLIENT_ID = your_project_id_here
+PORT = 8000
 ```
 
 4. Set your [Default Redirect Link](https://dashboard.workos.com/configuration) to `http://localhost:8000/success`.
 
-## Run the server
+## Run the development server
 
 ```sh
 npm run dev
+```
+
+## Compile TypeScript code and run the server
+
+```sh
+npm run build
+npm start
 ```
 
 Head to `http://localhost:8000/` and enter the email address to which you want to send the Magic Link!
