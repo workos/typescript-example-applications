@@ -14,7 +14,6 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/passwordless-auth', async (req: Request, res: Response) => {
   const email: string = req.body.email
-
   const session: PasswordlessSession = await workos.passwordless.createSession({
     email: email,
     type: 'MagicLink'
