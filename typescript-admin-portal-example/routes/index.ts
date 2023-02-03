@@ -1,4 +1,4 @@
-import express, { Request, Response, Router }from 'express'
+import express, { Request, Response, Router } from 'express'
 import WorkOS, { GeneratePortalLinkIntent } from '@workos-inc/node'
 import { Organization } from '@workos-inc/node/lib/organizations/interfaces/organization.interface'
 import { List } from '@workos-inc/node/lib/common/interfaces/list.interface'

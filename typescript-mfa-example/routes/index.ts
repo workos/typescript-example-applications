@@ -95,7 +95,7 @@ router.post('/verify_factor', async (req: Request, res: Response) => {
         authenticationChallengeId: challenge_id,
         code: code,
     })
-    
+
     res.render('challenge_success.ejs', { title: 'Challenge Success', verify_factor: verify_factor })
 })
 

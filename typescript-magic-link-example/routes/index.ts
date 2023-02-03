@@ -1,4 +1,4 @@
-import express, { Request, Response, Router }from 'express'
+import express, { Request, Response, Router } from 'express'
 import WorkOS, { PasswordlessSession, ProfileAndToken } from '@workos-inc/node'
 
 const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
@@ -19,7 +19,7 @@ router.post('/passwordless-auth', async (req: Request, res: Response) => {
     type: 'MagicLink'
   })
 
-  await workos.passwordless.sendSession(session.id) 
+  await workos.passwordless.sendSession(session.id)
 
   res.render('confirmation.ejs', {
     email: session.email,
@@ -28,11 +28,11 @@ router.post('/passwordless-auth', async (req: Request, res: Response) => {
 })
 
 router.get('/callback', async (req: Request, res: Response) => {
-  const code: string = typeof req.query.code == 'string' ? req.query.code : '' 
+  const code: string = typeof req.query.code == 'string' ? req.query.code : ''
   const profile: ProfileAndToken = await workos.sso.getProfileAndToken({
     code,
     clientID,
-  }) 
+  })
 
   res.render('login_successful.ejs', {
     profile: JSON.stringify(profile, null, 4),

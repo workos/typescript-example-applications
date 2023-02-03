@@ -17,6 +17,6 @@ app.use(morgan('dev'))
 
 app.use('/', router)
 
-app.listen( port, (): void => {
+app.listen(port, (): void => {
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
 })

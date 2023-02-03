@@ -7,16 +7,16 @@ const session: any = require('express-session')
 
 app.use(
   session({
-      secret: 'keyboard cat',
-      resave: false,
-      saveUninitialized: true,
-      cookie: { secure: true },
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
   })
 )
 
 const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
-const organizationID: string  = 'org_01GRC2753QJJG6TWFF7R70TS0M'
+const organizationID: string = 'org_01GRC2753QJJG6TWFF7R70TS0M'
 const redirectURI: string = 'http://localhost:8000/callback'
 const state: string = ''
 
@@ -43,7 +43,7 @@ router.get('/login', (req: Request, res: Response) => {
       redirectURI: redirectURI,
       state: state,
     })
-    
+
     res.redirect(url)
   } catch (error) {
     res.render('error.ejs', { error: error })
