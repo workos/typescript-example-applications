@@ -45,7 +45,7 @@ file at the root of the project, and store these like so:
 
 6. Add `http://localhost:8000/callback` as a Redirect URI in the Configuration section of the Dashboard.
 
-7. Update `routes/index.js` with the Connection ID.
+7. Update `routes/index.js` with the Organization ID.
 
 ## Run the development server
 
