@@ -34,7 +34,6 @@ An example TypeScript application demonstrating how to use the [WorkOS MFA API](
 file at the root of the project, and store these like so:
     ```
     WORKOS_API_KEY=sk_xxxxxxxxxxxxx
-    PORT=3000
     ```
 
 5. The final setup step is to start the server.
@@ -42,7 +41,7 @@ file at the root of the project, and store these like so:
    $ npm run dev
    ```
 
-   Navigate to `localhost:3000` in your web browser. 
+   Navigate to `http://localhost:8000/` in your web browser. 
 
 ## Using the MFA application
 
