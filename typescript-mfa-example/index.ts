@@ -1,24 +1,22 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import 'dotenv/config';
-import router from './routes/index';
-const cookieParser = require('cookie-parser');
+import express, { Application } from 'express'
+import 'dotenv/config'
+import morgan from 'morgan'
+import router from './routes/index'
 
+const app: Application = express()
 
-dotenv.config();
+const port: string = process.env.PORT || '8000'
 
-const app = express();
-const port = process.env.PORT;
+app.use('/public', express.static('public'))
 
-app.use('/public', express.static('public'));
+app.use(express.urlencoded({ extended: false }))
 
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(express.json())
 
+app.use(morgan('dev'))
 
-app.use('/', router);
+app.use('/', router)
 
-
-app.listen(port, () => {
-    console.log(`⚡️ [server]: Server is running at https://localhost:${port}`);
-});
+app.listen( port, (): void => {
+  console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
+})
