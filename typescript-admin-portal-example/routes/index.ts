@@ -18,7 +18,6 @@ router.get('/', (req: Request, res: Response) => {
 router.post('/provision-enterprise', async (req: Request, res: Response) => {
   const organizationName: string = req.body.org ? req.body.org : ''
   const domains: string[] = req.body.domain ? req.body.domain.split(' ') : []
-
   const organizations: List<Organization> = await workos.organizations.listOrganizations({
     domains: domains,
   })
