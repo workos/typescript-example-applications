@@ -1,5 +1,4 @@
 import express, { Application } from 'express'
-import dotenv from 'dotenv'
 import morgan from 'morgan'
 import 'dotenv/config'
 import router from './routes/index'
