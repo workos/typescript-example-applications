@@ -60,7 +60,7 @@ npm run build
 npm start
 ```
 
-Head to `http://localhost:8000/` to begin the login flow
+Head to `http://localhost:8000/` to begin the login flow!
 
 
 ## Need help?

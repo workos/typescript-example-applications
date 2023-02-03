@@ -43,13 +43,20 @@ WORKOS_CLIENT_ID=your_client_id_here
 
 4. Set your [Default Redirect Link](https://dashboard.workos.com/configuration).
 
-## Run the server and log in using SSO
+## Run the development server
 
 ```sh
-ts-node index.ts
+npm run dev
 ```
 
-Head to `http://localhost:3000/` to begin!
+## Compile TypeScript code and run the server
+
+```sh
+npm run build
+npm start
+```
+
+Head to `http://localhost:8000/` to begin the SSO or Directory Sync configuration flow!
 
 
 ## Need help?
