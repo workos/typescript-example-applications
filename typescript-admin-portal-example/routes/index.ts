@@ -1,49 +1,47 @@
 import express, { Request, Response, Router }from 'express'
 import WorkOS, { GeneratePortalLinkIntent } from '@workos-inc/node'
-import { Organization } from "@workos-inc/node/lib/organizations/interfaces/organization.interface"
-import 'dotenv/config'
+import { Organization } from '@workos-inc/node/lib/organizations/interfaces/organization.interface'
+import { List } from '@workos-inc/node/lib/common/interfaces/list.interface'
 
-const workos = new WorkOS(process.env.WORKOS_API_KEY)
-
-var organization: Organization
+const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 
 const router: Router = express.Router()
 
-router.get('/', (req, res) => {
-  res.render("index.ejs", {
-    title: "Home",
+let organization: Organization
+
+router.get('/', (req: Request, res: Response) => {
+  res.render('index.ejs', {
+    title: 'Home',
   })
 })
 
-router.post('/provision-enterprise', async (req, res) => {
-  const organizationName = req.body.org
-  const domains = req.body.domain.split(" ")
+router.post('/provision-enterprise', async (req: Request, res: Response) => {
+  const organizationName: string = req.body.org ? req.body.org : ''
+  const domains: string[] = req.body.domain ? req.body.domain.split(' ') : []
 
-  // Make call to listOrganizations and filter using the domain passed in by user.
-  const organizations = await workos.organizations.listOrganizations({
+  const organizations: List<Organization> = await workos.organizations.listOrganizations({
     domains: domains,
   })
-  // If no organizations exist with that domain, create one.
+
   if (organizations.data.length === 0) {
     organization = await workos.organizations.createOrganization({
       name: organizationName,
       domains: domains,
     })
+
     res.render('logged_in.ejs')
-  }
-  // If an organization does exist with the domain, use that organization for the connection.
-  else {
+  } else {
     organization = organizations.data[0]
+
     res.render('logged_in.ejs')
   }
 })
 
-router.get('/sso-admin-portal', async (_req, res) => {
-  const organizationID = organization.id
+router.get('/sso-admin-portal', async (req: Request, res: Response) => {
+  const organizationID: string = organization.id
 
   try {
-    // Generate an SSO Adnim Portal Link using the Organization ID from above.
-    const { link } = await workos.portal.generateLink({
+    const { link }: { link: string } = await workos.portal.generateLink({
       organization: organizationID,
       intent: GeneratePortalLinkIntent.SSO,
     })
@@ -54,12 +52,11 @@ router.get('/sso-admin-portal', async (_req, res) => {
   }
 })
 
-router.get('/dsync-admin-portal', async (_req, res) => {
-  const organizationID = organization.id
+router.get('/dsync-admin-portal', async (_req: Request, res: Response) => {
+  const organizationID: string = organization.id
 
   try {
-    // Generate an SSO Adnim Portal Link using the Organization ID from above.
-    const { link } = await workos.portal.generateLink({
+    const { link }: { link: string } = await workos.portal.generateLink({
       organization: organizationID,
       intent: GeneratePortalLinkIntent.DSync,
     })
