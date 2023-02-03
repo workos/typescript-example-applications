@@ -1,4 +1,2 @@
-node_modules
 .env
-out/
-tsconfig.tsbuildinfo
+node_modules
