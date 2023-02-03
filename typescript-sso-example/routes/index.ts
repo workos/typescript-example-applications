@@ -1,15 +1,24 @@
 import express, { Application, Request, Response, Router } from 'express'
-import { WorkOS } from '@workos-inc/node'
-const session = require('express-session')
+import { ProfileAndToken, WorkOS } from '@workos-inc/node'
+const session: any = require('express-session')
 
 const app: Application = express()
 const router: Router = express.Router()
 
+app.use(
+  session({
+      secret: '',
+      resave: false,
+      saveUninitialized: true,
+      cookie: { secure: true },
+  })
+)
+
 const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
-const connection: string  = 'org_01G8Y7Q0K3X5VYNE9TJKATDHYS'
+const organizationID: string  = ''
 const redirectURI: string = 'http://localhost:8000/callback'
-const state: string = 'thisguysemail@gmail.com'
+const state: string = ''
 
 router.get('/', (req: Request, res: Response) => {
   try {
@@ -19,9 +28,7 @@ router.get('/', (req: Request, res: Response) => {
         first_name: session.first_name
       })
     } else {
-      return res.render('index.ejs', {
-        title: 'Home'
-      })
+      return res.render('index.ejs')
     }
   } catch (error) {
     return res.render('error.ejs', { error: error })
@@ -30,24 +37,24 @@ router.get('/', (req: Request, res: Response) => {
 
 router.get('/login', (req: Request, res: Response) => {
   try {
-    const url = workos.sso.getAuthorizationURL({
-      connection: connection,
+    const url: string = workos.sso.getAuthorizationURL({
+      organization: organizationID,
       clientID: clientID,
       redirectURI: redirectURI,
+      state: state,
     })
-
-    return res.redirect(url)
+    
+    res.redirect(url)
   } catch (error) {
-    return res.render('error.ejs', { error: error })
+    res.render('error.ejs', { error: error })
   }
 })
 
-router.get('/callback', async (req, res) => {
+router.get('/callback', async (req: Request, res: Response) => {
   try {
-    console.log('HERE IT IS', req.query.code)
-    const code = typeof req.query.code === 'string' ? req.query.code : ''
+    const code: string = typeof req.query.code === 'string' ? req.query.code : ''
 
-    const profile = await workos.sso.getProfileAndToken({
+    const profile: ProfileAndToken = await workos.sso.getProfileAndToken({
       code,
       clientID,
     })
