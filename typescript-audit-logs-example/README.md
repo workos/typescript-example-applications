@@ -43,13 +43,20 @@ An example Node.js / TypeScript application demonstrating how to use the [WorkOS
     WORKOS_CLIENT_ID=project_xxxxxxxxxxxx
     ```
 
-## Testing the Integration
-
-5. Start the server and head to `http://localhost:8000/ to begin the login flow!
+## Run the development server
 
 ```sh
+npm run dev
+```
+
+## Compile TypeScript code and run the server
+
+```sh
+npm run build
 npm start
 ```
+
+Head to `http://localhost:8000/` to begin the flow!
 
 ## Audit Logs setup 
 
