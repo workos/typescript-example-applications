@@ -40,9 +40,9 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/set_org', async (req, res) => {
-    const organizationID = req.query.id ? req.query.id.toString() : ''
+    const organizationID: string = req.query.id ? req.query.id.toString() : ''
 
-    const org = await workos.organizations.getOrganization(
+    const org: Organization = await workos.organizations.getOrganization(
         organizationID
     )
 
@@ -120,7 +120,7 @@ router.post('/generate_csv', async (req, res) => {
 })
 
 router.get('/access_csv', async (req, res) => {
-    const auditLogExport = await workos.auditLogs.getExport(
+    const auditLogExport: AuditLogExport = await workos.auditLogs.getExport(
         session.exportId,
     )
 
@@ -129,21 +129,25 @@ router.get('/access_csv', async (req, res) => {
     }
 })
 
-// router.get('/events', async (req, res) => {
-//     if (req.query.intent === 'audit_logs' || req.query.intent === 'log_streams') {
-//         let intent = 'audit_logs'
-//     }
+router.get('/events', async (req, res) => {
+    let intent: GeneratePortalLinkIntent = GeneratePortalLinkIntent.AuditLogs
 
+    switch (req.query.intent) {
+        case 'audit_logs':
+            intent = GeneratePortalLinkIntent.AuditLogs
+            break
+        case 'log_streams':
+            intent = GeneratePortalLinkIntent.LogStreams
+            break
+    }
 
-//     const intent: GeneratePortalLinkIntent = req.query.intent
+    const { link }: { link: string } = await workos.portal.generateLink({
+        organization: session.orgId,
+        intent
+    })
 
-//     const { link } = await workos.portal.generateLink({
-//         organization: session.orgId,
-//         intent
-//     })
-
-//     res.redirect(link)
-// })
+    res.redirect(link)
+})
 
 router.get('/logout', (req, res) => {
     session.orgId = null
