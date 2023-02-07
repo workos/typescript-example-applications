@@ -1,101 +1,84 @@
-import express from "express";
-const router = express.Router();
-const app = express();
-import WorkOS from '@workos-inc/node';
-const session = require('express-session');
+import express, { Application, Request, Response, Router } from 'express'
+import { ProfileAndToken, WorkOS } from '@workos-inc/node'
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true },
-  isloggedin: false,
-}));
+const app: Application = express()
+const router: Router = express.Router()
+const session: any = require('express-session')
 
-const workos = new WorkOS(process.env.WORKOS_API_KEY);
-const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : "";
+app.use(
+  session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+)
 
-// Use the Connection ID associated to your SSO Connection.
-const connection = ""
+const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
+const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
+const organizationID: string = 'org_01GRC2753QJJG6TWFF7R70TS0M'
+const redirectURI: string = 'http://localhost:8000/callback'
+const state: string = ''
 
-// Set the redirect URI to whatever URL the end user should land on post-authentication.
-// Ensure that the redirect URI you use is included in your allowlist inthe WorkOS Dashboard.
-const redirectURI = "http://localhost:3000/callback";
-
-// Store the Client ID, pulled from .env sourced from the Configuration section
-// of the WorkOS Dashboard.
-
-
-router.get('/', (req, res) => {
-
+router.get('/', (req: Request, res: Response) => {
   try {
     if (session.isloggedin) {
       res.render('login_successful.ejs', {
         profile: JSON.stringify(session.profile, null, 2),
         first_name: session.first_name
-      });
-    }
-
-    else {
-      return res.render('index.ejs', {
-        title: "Home"
-      });
+      })
+    } else {
+      return res.render('index.ejs')
     }
   } catch (error) {
     return res.render('error.ejs', { error: error })
   }
-});
+})
 
-/* GET login page */
-router.get('/login', (_req, res) => {
+router.get('/login', (req: Request, res: Response) => {
   try {
-    const url = workos.sso.getAuthorizationURL({
-      connection: connection,
+    const url: string = workos.sso.getAuthorizationURL({
+      organization: organizationID,
       clientID: clientID,
       redirectURI: redirectURI,
-    });
+      state: state,
+    })
 
-    // Redirect the user to the url generated above.
-    return res.redirect(url);
+    res.redirect(url)
   } catch (error) {
-    return res.render('error.ejs', { error: error })
+    res.render('error.ejs', { error: error })
   }
-});
+})
 
-/* GET callback page */
-router.get('/callback', async (req, res) => {
+router.get('/callback', async (req: Request, res: Response) => {
   try {
-    // Capture and save the `code` passed as a querystring in the Redirect URI.
-    const code = req.query.code as unknown as string;
+    const code: string = typeof req.query.code === 'string' ? req.query.code : ''
 
-    const profile = await workos.sso.getProfileAndToken({
+    const profile: ProfileAndToken = await workos.sso.getProfileAndToken({
       code,
       clientID,
-    });
+    })
 
-
-    session.first_name = profile.profile.first_name;
+    session.first_name = profile.profile.first_name
     session.profile = profile
-    session.isloggedin = true;
+    session.isloggedin = true
 
-    return res.redirect('/');
-
+    res.redirect('/')
   } catch (error) {
     return res.render('error.ejs', { error: error })
   }
-});
+})
 
-// Logout route
-router.get('/logout', async (req, res) => {
+router.get('/logout', async (req: Request, res: Response) => {
   try {
-    session.first_name = null;
-    session.profile = null;
-    session.isloggedin = null;
+    session.first_name = null
+    session.profile = null
+    session.isloggedin = null
 
-    return res.redirect('/');
+    return res.redirect('/')
   } catch (error) {
     return res.render('error.ejs', { error: error })
   }
-});
+})
 
-export default router;
+export default router

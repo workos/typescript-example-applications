@@ -1,15 +1,22 @@
-import express from 'express';
-import 'dotenv/config';
-import router from './routes/index';
+import express, { Application } from 'express'
+import 'dotenv/config'
+import morgan from 'morgan'
+import router from './routes/index'
 
-const app = express();
-const port = 3000;
+const app: Application = express()
 
-app.use("/", router);
-app.use('/public', express.static('public'));
+const port: string = process.env.PORT || '8000'
 
-// start the Express server
-app.listen( port, () => {
-  // tslint:disable-next-line:no-console
-  console.log( `server started at ${port}` );
-} );
+app.use('/public', express.static('public'))
+
+app.use(express.urlencoded({ extended: false }))
+
+app.use(express.json())
+
+app.use(morgan('dev'))
+
+app.use('/', router)
+
+app.listen(port, (): void => {
+  console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
+})

@@ -43,17 +43,24 @@ file at the root of the project, and store these like so:
 
 5. Follow the [SSO authentication flow instructions](https://workos.com/docs/sso/guide/introduction) to create a new SSO connection in your WorkOS dashboard.
 
-6. Add `http://localhost:3000/callback` as a Redirect URI in the Configuration section of the Dashboard.
+6. Add `http://localhost:8000/callback` as a Redirect URI in the Configuration section of the Dashboard.
 
-7. Update `routes/index.js` with the Connection ID.
+7. Update `routes/index.js` with the Organization ID.
 
-## Testing the Integration
-
-8. Start the server and head to `http://localhost:3000/ to begin the login flow! 
+## Run the development server
 
 ```sh
 npm run dev
 ```
+
+## Compile TypeScript code and run the server
+
+```sh
+npm run build
+npm start
+```
+
+Head to `http://localhost:8000/` to begin the login flow!
 
 
 ## Need help?
