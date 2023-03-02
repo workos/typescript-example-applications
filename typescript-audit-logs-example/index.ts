@@ -1,6 +1,6 @@
 const express = require('express')
 import 'dotenv/config.js'
-const router = require('./routes/index.ts')
+import router from './routes/index'
 import morgan from 'morgan'
 
 const app = express()

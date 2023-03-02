@@ -1,11 +1,11 @@
-const express = require('express')
-const session = require('express-session')
-const openIt = require('open')
-const { WorkOS } = require('@workos-inc/node')
-const { user_signed_in, user_logged_out, user_organization_deleted, user_connection_deleted} = require('../audit_log_events')
+import express, { Application, Router } from 'express'
+import { AuditLogExport, GeneratePortalLinkIntent, Organization, WorkOS } from '@workos-inc/node'
+import { List } from '@workos-inc/node/lib/common/interfaces/list.interface'
+import open from 'open'
 
-const app = express()
-const router = express.Router()
+const app: Application = express()
+const router: Router = express.Router()
+const session = require('express-session')
 
 app.use(
     session({
@@ -16,83 +16,147 @@ app.use(
     })
 )
 
-const workos = new WorkOS(process.env.WORKOS_API_KEY)
+const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 
-router.get('/', function (req: any, res: any) {
-    res.render('login.ejs')
+router.get('/', async (req, res) => {
+    let before: string | undefined = req.query.before ? req.query.before.toString() : undefined
+    let after: string | undefined = req.query.after ? req.query.after.toString() : undefined
+
+    const organizations: List<Organization> = await workos.organizations.listOrganizations({
+        limit: 5,
+        before: before,
+        after: after,
+        order: undefined
+    })
+
+    before = organizations.list_metadata.before
+    after = organizations.list_metadata.after
+
+    res.render('login.ejs', {
+        organizations: organizations.data,
+        before: before,
+        after: after,
+    })
 })
 
-router.post('/set_org', async (req: any, res: any) => {
-    const org = await workos.organizations.getOrganization(
-        req.body.org
-    );
+router.get('/set_org', async (req, res) => {
+    const organizationID: string = req.query.id ? req.query.id.toString() : ''
+
+    const org: Organization = await workos.organizations.getOrganization(
+        organizationID
+    )
 
     session.orgId = org.id
     session.orgName = org.name
 
+    const now: Date = new Date()
+    const monthAgo: number = now.setMonth(now.getMonth() - 1)
+
     res.render('send_events.ejs', {
         orgName: org.name,
-        orgId: org.id
+        orgId: org.id,
+        rangeStart: new Date(monthAgo).toISOString(),
+        rangeEnd: new Date().toISOString()
     })
 })
 
-router.post('/send_event', async (req: any, res:any) => {
-    const eventId = req.body.eventId
-    let event;
+router.post('/send_event', async (req, res) => {
+    const { eventAction, eventVersion, actorName, actorType, targetName, targetType } = req.body
 
-    switch(eventId) {
-        case 'user_signed_in':
-            event = user_signed_in
+    const event = {
+        'action': eventAction,
+        'version': Number(eventVersion),
+        'occurred_at': new Date(),
+        'actor': {
+            'type': actorType,
+            'name': actorName,
+            'id': 'user_12345678901234567890123456',
+        },
+        'targets': [
+            {
+                'type': targetType,
+                'name': targetName,
+                'id': 'team_12345678901234567890123456',
+            },
+        ],
+        'context': {
+            'location': '123.123.123.123',
+            'user_agent': 'Chrome/104.0.0.0',
+        },
+    }
+
+    try {
+        await workos.auditLogs.createEvent(
+            session.orgId,
+            event
+        )
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.post('/generate_csv', async (req, res) => {
+    const { actions, actors, targets, rangeStart, rangeEnd } = req.body
+
+    const exportDetails = {
+        organization_id: session.orgId,
+        range_start: rangeStart,
+        range_end: rangeEnd,
+        actions: undefined,
+        actors: undefined,
+        targets: undefined
+    }
+
+    actions && (exportDetails.actions = actions)
+    actors && (exportDetails.actors = actors)
+    targets && (exportDetails.targets = targets)
+
+    try {
+        const auditLogExport: AuditLogExport = await workos.auditLogs.createExport(exportDetails)
+        session.exportId = auditLogExport.id
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.get('/access_csv', async (req, res) => {
+    const auditLogExport: AuditLogExport = await workos.auditLogs.getExport(
+        session.exportId,
+    )
+
+    if (auditLogExport.url) {
+        await open(auditLogExport.url)
+    }
+})
+
+router.get('/events', async (req, res) => {
+    let intent: GeneratePortalLinkIntent = GeneratePortalLinkIntent.AuditLogs
+
+    switch (req.query.intent) {
+        case 'audit_logs':
+            intent = GeneratePortalLinkIntent.AuditLogs
             break
-        case 'user_logged_out':
-            event = user_logged_out
-            break
-        case 'user_organization_deleted':
-            event = user_organization_deleted
-            break
-        case 'user_connection_deleted':
-            event = user_connection_deleted
+        case 'log_streams':
+            intent = GeneratePortalLinkIntent.LogStreams
             break
     }
 
-    await workos.auditLogs.createEvent(
-        session.orgId || 'org_01G2TKRPR28XB702EF71EA8BY6',
-        event
-    )
-})
-
-router.get('/export_events', (req: any, res: any) => {
-    res.render('export_events.ejs', {
-        orgName: session.orgName,
-        orgId: session.orgId
-    })
-})
-
-router.get('/generate_csv', async (req: any, res: any) => {
-    const now = new Date()
-    const monthAgo = now.setMonth(now.getMonth() - 1)
-
-    const auditLogExport = await workos.auditLogs.createExport({
-        organization_id: session.orgId,
-        range_start: new Date(monthAgo).toISOString(),
-        range_end: new Date().toISOString(),
+    const { link }: { link: string } = await workos.portal.generateLink({
+        organization: session.orgId,
+        intent
     })
 
-    session.exportId = auditLogExport.id
+    res.redirect(link)
 })
 
-router.get('/access_csv', async (req: any, res: any) => {
-    const auditLogExport = await workos.auditLogs.getExport(
-        session.exportId,
-    )   
-
-    openIt(auditLogExport.url)
-})
-
-router.get('/logout', (req: any, res: any) => {
+router.get('/logout', (req, res) => {
     session.orgId = null
-    res.render('login.ejs')
+    session.orgName = null
+    session.exportId = null
+
+    res.redirect('/')
 })
 
-module.exports = router;
+export default router
+
 
