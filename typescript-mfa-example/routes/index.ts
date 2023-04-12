@@ -29,25 +29,29 @@ router.get('/enroll_factor', (req: Request, res: Response) => {
     res.render('enroll_factor.ejs')
 })
 
-router.post('/enroll_new_factor', async (req: Request, res: Response) => {
-    if (req.body.type === 'sms') {
-        const phone_number: string = req.body.phone_number
+router.post('/enroll_sms_factor', async (req: Request, res: Response) => {
+    const phone_number: string = req.body.phone_number
+    const new_factor: Factor = await workos.mfa.enrollFactor({
+        type: 'sms',
+        phoneNumber: phone_number,
+    })
 
-        const new_factor: Factor = await workos.mfa.enrollFactor({
-            type: 'sms',
-            phoneNumber: phone_number,
-        })
-        factors.push(new_factor)
-    } else {
-        const new_factor: Factor = await workos.mfa.enrollFactor({
-            type: 'totp',
-            issuer: req.body.totp_issuer,
-            user: req.body.totp_user,
-        })
-        factors.push(new_factor)
-    }
+    factors.push(new_factor)
     res.redirect('/')
 })
+
+router.post('/enroll_totp_factor', async (req: Request, res: Response) => {
+    const { type, issuer, user }: { type: "totp", issuer: string, user: string } = req.body
+    const new_factor = await workos.mfa.enrollFactor({
+        type,
+        issuer,
+        user
+    })
+
+    factors.push(new_factor)
+    res.json(new_factor.totp.qr_code)
+})
+
 
 router.get('/factor_detail/:id', async (req: Request, res: Response) => {
     const factor = factors.filter((factor) => {
