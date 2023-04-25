@@ -4,6 +4,14 @@ import { ProfileAndToken, WorkOS } from '@workos-inc/node'
 const app: Application = express()
 const router: Router = express.Router()
 const session: any = require('express-session')
+interface Params {
+  clientID: string;
+  redirectURI: string;
+  state?: string;
+  provider?: string;
+  connection?: string;
+  organization?: string;
+}
 
 app.use(
   session({
@@ -16,7 +24,7 @@ app.use(
 
 const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
-const organizationID: string = 'org_01GRC2753QJJG6TWFF7R70TS0M'
+const organizationID: string = ''
 const redirectURI: string = 'http://localhost:8000/callback'
 const state: string = ''
 
@@ -35,14 +43,24 @@ router.get('/', (req: Request, res: Response) => {
   }
 })
 
-router.get('/login', (req: Request, res: Response) => {
+router.post('/login', (req: Request, res: Response) => {
+  
+  const login_type = req.body.login_method;
+
+    const params: Params = {
+        clientID: clientID,
+        redirectURI: redirectURI,
+        state: state
+    };
+
+    if (login_type === "saml") {
+        params.organization = organizationID;
+    } else {
+        params.provider = login_type;
+    }
+  
   try {
-    const url: string = workos.sso.getAuthorizationURL({
-      organization: organizationID,
-      clientID: clientID,
-      redirectURI: redirectURI,
-      state: state,
-    })
+    const url: string = workos.sso.getAuthorizationURL(params)
 
     res.redirect(url)
   } catch (error) {
