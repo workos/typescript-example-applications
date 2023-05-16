@@ -15,7 +15,9 @@ app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(morgan('dev'))
 
-process.on('unhandledRejection', (reason, p) => { throw reason })
+process.on('unhandledRejection', (reason, p) => {
+    throw reason
+})
 
 const server = app.listen(port, (): void => {
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
@@ -32,15 +34,20 @@ io.on('connection', (socket: Socket) => {
 })
 
 app.get('/', async (req: Request, res: Response) => {
-    let before: string | undefined = req.query.before ? req.query.before.toString() : undefined
-    let after: string | undefined = req.query.after ? req.query.after.toString() : undefined
+    let before: string | undefined = req.query.before
+        ? req.query.before.toString()
+        : undefined
+    let after: string | undefined = req.query.after
+        ? req.query.after.toString()
+        : undefined
 
-    const directories: List<Directory> = await workos.directorySync.listDirectories({ 
-        limit: 5, 
-        before: before, 
-        after: after, 
-        order: undefined 
-    })
+    const directories: List<Directory> =
+        await workos.directorySync.listDirectories({
+            limit: 5,
+            before: before,
+            after: after,
+            order: undefined,
+        })
 
     before = directories.list_metadata.before
     after = directories.list_metadata.after
@@ -49,93 +56,62 @@ app.get('/', async (req: Request, res: Response) => {
         title: 'Home',
         directories: directories.data,
         before: before,
-        after: after
+        after: after,
     })
 })
 
-app.get('/directory/:id', async (req: Request, res: Response) => {
-    const directories: List<Directory> = await workos.directorySync.listDirectories()
-    const directory: Directory = directories.data.filter((directory: Directory) => {
-        return directory.id == req.params.id
-    })[0]
+app.get('/directory', async (req: Request, res: Response) => {
+    const directories: List<Directory> =
+        await workos.directorySync.listDirectories()
+    const directory: Directory = directories.data.filter(
+        (directory: Directory) => {
+            return directory.id == req.query.id
+        }
+    )[0]
 
     res.render('directory.ejs', {
         directory: directory,
-        title: 'Directory'
+        title: 'Directory',
     })
 })
 
-app.get('/directory/:id/usersgroups', async (req: Request, res: Response) => {
-    const directories: List<Directory> = await workos.directorySync.listDirectories()
-    const directory: Directory = directories.data.filter((directory: Directory) => {
-        return directory.id == req.params.id
-    })[0]
-
-    const groups: List<Group> = await workos.directorySync.listGroups({
-        directory: req.params.id,
-    })
+app.get('/users', async (req, res) => {
+    let directoryId: string | undefined
+    if (typeof req.query.id === 'string') {
+        directoryId = req.query.id
+    }
 
     const users: List<User> = await workos.directorySync.listUsers({
-        directory: req.params.id,
+        directory: directoryId,
+        limit: 100,
     })
-
-    res.render('groups.ejs', {
-        groups: groups.data,
-        directory: directory,
-        users: users.data,
-        title: 'Group & Users'
-    })
+    res.render('users.ejs', { users: users.data })
 })
 
-app.get('/directory/:id/group/:groupId', async (req: Request, res: Response) => {
-    const directories: List<Directory> = await workos.directorySync.listDirectories()
-    const directory: Directory = directories.data.filter((directory: Directory) => {
-        return directory.id == req.params.id
-    })[0]
+app.get('/groups', async (req, res) => {
+    let directoryId: string | undefined
+    if (typeof req.query.id === 'string') {
+        directoryId = req.query.id
+    }
 
     const groups: List<Group> = await workos.directorySync.listGroups({
-        directory: req.params.id,
+        directory: directoryId,
+        limit: 100,
     })
-
-    const group: Group = groups.data.filter((group: Group) => {
-        return group.id == req.params.groupId
-    })[0]
-
-    res.render('group.ejs', {
-        directory: directory,
-        title: 'Directory',
-        group: JSON.stringify(group, null, 2),
-        rawGroup: group
-    })
-})
-
-app.get('/directory/:id/user/:userId', async (req: Request, res: Response) => {
-    const directories: List<Directory> = await workos.directorySync.listDirectories()
-    const directory: Directory = directories.data.filter((directory: Directory) => {
-        return directory.id == req.params.id
-    })[0]
-
-    const users: List<User> = await workos.directorySync.listUsers({
-        directory: req.params.id,
-    })
-
-    const user: User = users.data.filter((user: User) => {
-        return user.id == req.params.userId
-    })[0]
-
-    res.render('user', {
-        directory: directory,
-        title: 'Directory',
-        user: JSON.stringify(user, null, 2),
-        rawUser: user
-    })
+    res.render('groups.ejs', { groups: groups.data })
 })
 
 app.post('/webhooks', async (req: Request, res: Response) => {
     const webhook: Webhook = workos.webhooks.constructEvent({
         payload: req.body,
-        sigHeader: typeof req.headers['workos-signature'] === 'string' ? req.headers['workos-signature'] : '',
-        secret: process.env.WORKOS_WEBHOOK_SECRET !== undefined ? process.env.WORKOS_WEBHOOK_SECRET : '',
+        sigHeader:
+            typeof req.headers['workos-signature'] === 'string'
+                ? req.headers['workos-signature']
+                : '',
+        secret:
+            process.env.WORKOS_WEBHOOK_SECRET !== undefined
+                ? process.env.WORKOS_WEBHOOK_SECRET
+                : '',
         tolerance: 90000,
     })
 
@@ -146,6 +122,6 @@ app.post('/webhooks', async (req: Request, res: Response) => {
 
 app.get('/webhooks', async (req: Request, res: Response) => {
     res.render('webhooks.ejs', {
-        title: 'Webhooks'
+        title: 'Webhooks',
     })
 })

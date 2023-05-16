@@ -12,17 +12,15 @@ app.use(
         secret: 'keyboard cat',
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: true }
-    }))
+        cookie: { secure: true },
+    })
+)
 
 const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
-let factors: Factor[] = session.factors = []
+let factors: Factor[] = (session.factors = [])
 
 router.get('/', async (req: Request, res: Response) => {
-    res.render('index.ejs', {
-        title: 'Home',
-        factors: factors,
-    })
+    res.render('index.ejs', { factors: factors })
 })
 
 router.get('/enroll_factor', (req: Request, res: Response) => {
@@ -41,17 +39,20 @@ router.post('/enroll_sms_factor', async (req: Request, res: Response) => {
 })
 
 router.post('/enroll_totp_factor', async (req: Request, res: Response) => {
-    const { type, issuer, user }: { type: "totp", issuer: string, user: string } = req.body
+    const {
+        type,
+        issuer,
+        user,
+    }: { type: 'totp'; issuer: string; user: string } = req.body
     const new_factor = await workos.mfa.enrollFactor({
         type,
         issuer,
-        user
+        user,
     })
 
     factors.push(new_factor)
     res.json(new_factor.totp.qr_code)
 })
-
 
 router.get('/factor_detail/:id', async (req: Request, res: Response) => {
     const factor = factors.filter((factor) => {
@@ -59,7 +60,7 @@ router.get('/factor_detail/:id', async (req: Request, res: Response) => {
     })[0]
 
     session.current_factor = factor
-    res.render('factor_detail.ejs', { title: 'Factor Detail', factor: factor })
+    res.render('factor_detail.ejs', { factor: factor })
 })
 
 router.post('/challenge_factor', async (req: Request, res: Response) => {
@@ -76,12 +77,12 @@ router.post('/challenge_factor', async (req: Request, res: Response) => {
 
     if (session.current_factor.type === 'totp') {
         const challenge = await workos.mfa.challengeFactor({
-            authenticationFactorId: session.current_factor.id
+            authenticationFactorId: session.current_factor.id,
         })
         session.challenge_id = challenge.id
     }
 
-    res.render('challenge_factor.ejs', { title: 'Challenge Factor' })
+    res.render('challenge_factor.ejs')
 })
 
 router.post('/verify_factor', async (req: Request, res: Response) => {
@@ -100,7 +101,10 @@ router.post('/verify_factor', async (req: Request, res: Response) => {
         code: code,
     })
 
-    res.render('challenge_success.ejs', { title: 'Challenge Success', verify_factor: verify_factor })
+    res.render('challenge_success.ejs', {
+        verify_factor: verify_factor,
+        type: session.current_factor.type,
+    })
 })
 
 router.get('/clear_session', (req, res) => {
